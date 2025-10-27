@@ -35,6 +35,24 @@ pipeline
             }
         }
 
+
+        stage('SonarQube Analysis') {
+            agent {
+                label 'Miquella'
+            }
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQube-Scanner-SAST'
+                    withSonarQubeEnv('SonarQube-Installations-SAST') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=gameapp \
+                            -Dsonar.sources=."
+                    }
+                }
+            }
+        }
+
+        
         stage('BUILD-and-TAG')
         {
             agent { label 'Miquella'}
